@@ -22,6 +22,7 @@ long startTime = 0;
 const int PERIOD = 4000;
 
 void setup() {
+  Serial.begin(9600);
   int fingerNum = 0;
   int notCalib = 1;
   
@@ -50,7 +51,6 @@ void setup() {
 }
 
 void calibration(int motor_id, int notCalib ){
-  Serial.begin(9600);
   delay(2);
   
   Serial.print("Calibrating motor ");
