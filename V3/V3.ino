@@ -41,6 +41,7 @@ void setup() {
   lastTime = millis();
 
   setupPoses();
+  setupStages();
 }
 
 void activatePose(Pose *pose){
