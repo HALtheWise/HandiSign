@@ -6,9 +6,9 @@ class MyServo
     MyServo(){
     }
 
-    void calibrate(int center, int range){
-      _minpos = center - range;
-      _maxpos = center + range;
+    void calibrate(int minpos, int maxpos){
+      _minpos = minpos;
+      _maxpos = maxpos;
     }
 
     void attach(int pin){

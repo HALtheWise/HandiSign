@@ -22,12 +22,11 @@ long startTime = 0;
 const int PERIOD = 4000;
 
 void setup() {
-  Serial.begin(9600);
   int fingerNum = 0;
   int notCalib = 1;
   
-//  Serial.begin(9600);
-//  delay(2);
+  Serial.begin(9600);
+  delay(2);
   
   for (fingerNum = 0; fingerNum <= 3; fingerNum++){
     calibration(fingerNum, notCalib);
@@ -51,73 +50,71 @@ void setup() {
 }
 
 void calibration(int motor_id, int notCalib ){
-  delay(2);
-  
   Serial.print("Calibrating motor ");
   Serial.println(motor_id);
   Serial.println(notCalib);
 //  Serial.println(Serial.available());
   
-//  fingers[motor_id].attach(motor_id+2); //Checks motors sequentially
-//  
-//  while (Serial.available() && (notCalib == 1)) {
-//    char userInput = Serial.read();  //gets one byte from serial buffer
-//    readString += userInput; //makes the string readString
-//    delay(2);  //slow looping to allow buffer to fill with next character
-//
-//    if (readString.length() >0) {
-//      if(readString.indexOf('x') >0) { 
-//        pos = readString.toInt();
-//      }
-//    
-//      if(readString =="k"){
-//        (pos=pos-1); //use larger numbers for larger increments
-//        if(pos<0) (pos=0); //prevent negative number
-//        Serial.println(pos);
-//      }
-//      else if (readString =="l"){
-//        (pos=pos+1);
-//        Serial.println(pos);
-//      }
-//      else if (readString =="o"){
-//        int minCalib = pos;
-//        Serial.println("Minimum Calibration is");
-//        Serial.print(minCalib);
-//      }
-//      else if (readString =="p"){
-//        int maxCalib = pos;
-//        Serial.println("Maximum Calibration is");
-//        Serial.print(maxCalib);
-//      }
-//      else if (readString =="q"){
-//        notCalib = 0;
-//        Serial.println("Exiting calibration mode");
-//        break;
-//      }
-//      else{
-//        Serial.println("Hoi");
-//      }
-//    
-//      if(pos >= 400) //determine servo write method
-//      {
-//        Serial.println(pos);
-//        fingers[motor_id].write(pos);
-//      }
-//      else
-//      {   
-//        Serial.println(pos);
-//        fingers[motor_id].write(pos); 
-//      }
-//    }
-//    else{
-//        Serial.println("No input");
-//    }
-//  readString=""; //empty for next input
-//  }
-//
-//  Serial.println("No serial input");
-//  
-//  fingers[motor_id].calibrate(90,10);
+  fingers[motor_id].attach(motor_id+2); //Checks motors sequentially
+  
+  while (Serial.available() && (notCalib == 1)) {
+    char userInput = Serial.read();  //gets one byte from serial buffer
+    readString += userInput; //makes the string readString
+    delay(2);  //slow looping to allow buffer to fill with next character
+
+    if (readString.length() >0) {
+      if(readString.indexOf('x') >0) { 
+        pos = readString.toInt();
+      }
+    
+      if(readString =="k"){
+        (pos=pos-1); //use larger numbers for larger increments
+        if(pos<0) (pos=0); //prevent negative number
+        Serial.println(pos);
+      }
+      else if (readString =="l"){
+        (pos=pos+1);
+        Serial.println(pos);
+      }
+      else if (readString =="o"){
+        int minCalib = pos;
+        Serial.println("Minimum Calibration is");
+        Serial.print(minCalib);
+      }
+      else if (readString =="p"){
+        int maxCalib = pos;
+        Serial.println("Maximum Calibration is");
+        Serial.print(maxCalib);
+      }
+      else if (readString =="q"){
+        notCalib = 0;
+        Serial.println("Exiting calibration mode");
+        break;
+      }
+      else{
+        Serial.println("Hoi");
+      }
+    
+      if(pos >= 400) //determine servo write method
+      {
+        Serial.println(pos);
+        fingers[motor_id].write(pos);
+      }
+      else
+      {   
+        Serial.println(pos);
+        fingers[motor_id].write(pos); 
+      }
+    }
+    else{
+        Serial.println("No input");
+    }
+  readString=""; //empty for next input
+  }
+
+  Serial.println("No serial input");
+  
+  fingers[motor_id].calibrate(90,10);
   
 }
 
