@@ -26,17 +26,29 @@ const int TIMEOUT = 4000;
 void setup() {
   Serial.begin(9600);
 
+  // Pinky
   fingers[0].attach(2);
   fingers[0].calibrate(70,110);
 
+  // Ring
   fingers[1].attach(3);
   fingers[1].calibrate(70,130);
 
+  // Middle
   fingers[2].attach(4);
   fingers[2].calibrate(110,70);
 
+  // Pointer
   fingers[3].attach(5);
   fingers[3].calibrate(90,90);
+
+  // Thumb
+  fingers[4].attach(6);
+  fingers[4].calibrate(90,90);
+
+  // Spread
+  fingers[5].attach(7);
+  fingers[5].calibrate(90,90);
 
   lastTime = millis();
 
