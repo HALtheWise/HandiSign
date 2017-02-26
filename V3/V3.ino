@@ -7,19 +7,21 @@
  http://www.arduino.cc/en/Tutorial/Sweep
 */
 
-#define NUM_SERVOS 4
+#define NUM_SERVOS 8
 
 #include "poses.h"
 #include "myservo.h"
+#include "alphabet.h"
+#include "helloworld.h"
 
 MyServo fingers[NUM_SERVOS];
 
-int pos = 0;    // variable to store the servo position
 long lastTime = 0;
 
-float *activePose = pOPEN; // Pointer to array of length NUM_SERVOS
+Pose *activePose = 0; 
+Stage *activeStage = 0;
 
-const int PERIOD = 4000;
+const int TIMEOUT = 4000;
 
 void setup() {
   Serial.begin(9600);
@@ -41,9 +43,9 @@ void setup() {
   setupPoses();
 }
 
-void activatePose(float *pose){
+void activatePose(Pose *pose){
   for (int i = 0; i < NUM_SERVOS; i++){
-    fingers[i].write(pose[i]);
+    fingers[i].write(pose->positions[i]);
   }
 }
 
@@ -53,13 +55,13 @@ void handleSerial(){
     int id = -1;
 
     if (b == 'o'){
-      activePose = pOPEN;
+      activePose = &pOPEN;
     }
     else if (b == 'c'){
-      activePose = pCLOSED;
+      activePose = &pCLOSED;
     }
     else if (b == 'g'){
-      activePose = pGUN;
+      activePose = &pGUN;
     }else{
       continue;
     }
@@ -69,17 +71,36 @@ void handleSerial(){
   }
 }
 
+void activateStage(Stage *stage){
+  activatePose(stage->pose);
+}
+
 void loop() {
   handleSerial();
   
   int t = millis() - lastTime;
   //lastTime = millis();
 
-  if (t > PERIOD){
-    activePose = pOPEN;
+  if (t > TIMEOUT){
+    activePose = &pOPEN;
   }
-  
-  activatePose(activePose);
+  if (activePose){  
+    activatePose(activePose);
+  }
+  else if (activeStage){
+    activateStage(activeStage);
+
+    if (t > activeStage->holdDuration * 1000){
+      // Stage is done
+      if (activeStage->successor){
+        activeStage = activeStage->successor;
+      } else {
+        activeStage = 0;
+      }
+    }
+  }else{
+    activePose = &pOPEN;
+  }
 
   delay(1);
 //  for (pos = 0; pos <= 180; pos += 1) { // goes from 0 degrees to 180 degrees
